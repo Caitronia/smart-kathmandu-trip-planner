@@ -1,4 +1,4 @@
-from database import get_db_connection
+from .database import get_db_connection
 import sqlite3
 
 def seed_attractions():

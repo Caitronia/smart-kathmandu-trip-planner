@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 import os
-from database import init_db
+from .database import init_db
 
 def create_app():
     """Create and configure the Flask application"""
