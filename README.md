@@ -1,2 +1,1 @@
-# smart-kathmandu-trip-planner
-AI-assisted travel planning for Kathmandu Valley
+# Smart Kathmandu Trip Planner
