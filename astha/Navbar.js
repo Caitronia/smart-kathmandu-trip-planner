@@ -46,9 +46,9 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className={`text-2xl font-bold flex items-center gap-2 transition-colors ${scrolled ? 'text-blue-600' : 'text-white drop-shadow-lg'}`}>
+        <Link to="/" className={`text-2xl font-bold flex items-center gap-0 transition-colors ${scrolled ? 'text-blue-600' : 'text-white drop-shadow-lg'}`}>
           <img src={logo} alt="Trip Planner Logo" className="h-16 w-auto" />
-          <span>Trip Planner</span>
+          
         </Link>
 
         {/* Desktop Menu */}
