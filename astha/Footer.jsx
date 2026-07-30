@@ -1,6 +1,7 @@
 // src/Components/Footer.js
 import { useNavigate, Link } from 'react-router-dom';
 import { FaGithub, FaEnvelope, FaInstagram, FaLinkedinIn} from "react-icons/fa";
+import logo from '../assets/logo.png';
 
 const Footer = ({ isLoggedIn }) => {
     const navigate = useNavigate();
@@ -23,28 +24,31 @@ const Footer = ({ isLoggedIn }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 border-b border-gray-700 pb-8">
 
                     {/* Brand Section */}
-                    <div className="flex flex-col space-y-4">
-                        <h3 className="text-2xl font-bold text-blue-400">Trip Planner</h3>
-                        <p className="text-sm text-gray-400">
-                            Your ultimate companion for exploring the incredible destinations of Nepal. 
-                            Plan smarter, travel better.
-                        </p>
-                        <div className="flex space-x-4 text-xl">
-                            <a href="mailto:your@email.com" className="hover:text-blue-400 transition-colors duration-200" aria-label="Email">
-                                <FaEnvelope />
-                            </a>
-                            <a href="https://github.com" className="hover:text-blue-400 transition-colors duration-200" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                                <FaGithub />
-                            </a>
-                            <a href="https://www.instagram.com" className="hover:text-blue-400 transition-colors duration-200" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                                <FaInstagram />
-                            </a>
-                            <a href="https://www.linkedin.com" className="hover:text-blue-400 transition-colors duration-200" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                                <FaLinkedinIn />
-                            </a>
-                        </div>
-                    </div>
-
+                    {/* Brand Section */}
+<div className="flex flex-col space-y-4">
+    <div className="flex items-center gap-2">
+        <img src={logo} alt="Trip Planner Logo" className="h-10 w-auto" />
+        <h3 className="text-2xl font-bold text-blue-400">Trip Planner</h3>
+    </div>
+    <p className="text-sm text-gray-400">
+        Your ultimate companion for exploring the incredible destinations of Nepal. 
+        Plan smarter, travel better.
+    </p>
+    <div className="flex space-x-4 text-xl">
+        <a href="mailto:your@email.com" className="hover:text-blue-400 transition-colors duration-200" aria-label="Email">
+            <FaEnvelope />
+        </a>
+        <a href="https://github.com" className="hover:text-blue-400 transition-colors duration-200" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <FaGithub />
+        </a>
+        <a href="https://www.instagram.com" className="hover:text-blue-400 transition-colors duration-200" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <FaInstagram />
+        </a>
+        <a href="https://www.linkedin.com" className="hover:text-blue-400 transition-colors duration-200" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <FaLinkedinIn />
+        </a>
+    </div>
+</div>
                     {/* Quick Links */}
                     <div>
                         <h4 className="text-lg font-semibold text-white mb-3">Quick Links</h4>
