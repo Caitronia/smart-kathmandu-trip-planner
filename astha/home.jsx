@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FaMapMarkedAlt, 
-  FaUserFriends, FaHeadset, FaArrowRight, 
-  FaSun, FaHotel, FaRoute, FaUserTie,
-  FaChartLine, FaPlane
-} from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 
 // ==========================================================
 // === EXACT LOCAL ASSET IMPORTS =============================
@@ -78,29 +73,6 @@ const TourCard = ({ tour, onClick }) => (
     </div>
   </div>
 );
-
-const AnimatedCounter = ({ target, suffix = "+" }) => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    let start = 0;
-    const duration = 2000;
-    const stepTime = 16;
-    const totalSteps = duration / stepTime;
-    const increment = target / totalSteps;
-    
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, stepTime);
-    return () => clearInterval(timer);
-  }, [target]);
-  return <span className="tabular-nums">{count.toLocaleString()}{suffix}</span>;
-};
 
 // ==========================================================
 // === MAIN HOME PAGE ========================================
@@ -226,76 +198,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= WHY CHOOSE US ================= */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#1E88E5]/5 rounded-full blur-3xl opacity-50 -z-10"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#0F4C81]/5 rounded-full blur-3xl opacity-50 -z-10"></div>
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold text-[#1F2937] mb-3 tracking-tight">Why Choose Trip Planner</h2>
-            <p className="text-[#6B7280] text-lg font-light">Built for the modern explorer. We fuse AI intelligence with hyper-local expertise to simplify your journey.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { icon: <FaChartLine className="text-[#1E88E5]" />, title: "AI Trip Planning", desc: "Machine learning algorithms craft itineraries perfectly matched to your travel style and pace." },
-              { icon: <FaHotel className="text-[#0F4C81]" />, title: "Hotel Recommendation", desc: "Hand-picked luxury, boutique, and traditional accommodations based on your preferences." },
-              { icon: <FaSun className="text-yellow-500" />, title: "Weather Forecast", desc: "Hyper-accurate, high-altitude weather modeling to ensure you pack perfectly for the peaks." },
-              { icon: <FaRoute className="text-red-500" />, title: "Route Optimization", desc: "Intelligent pathfinding helps you avoid traffic and maximize your exploration time." },
-              { icon: <FaUserTie className="text-indigo-500" />, title: "Local Guides", desc: "Connect with verified, vetted native experts who know the hidden gems of Nepal." },
-            ].map((feature, i) => (
-              <div key={i} className="group bg-white/60 backdrop-blur-xl p-10 rounded-2xl shadow-lg border border-gray-100/80 hover:shadow-2xl hover:border-[#1E88E5]/30 transition-all duration-300 hover:-translate-y-1">
-                <div className="w-14 h-14 bg-[#F8FAFC] backdrop-blur-sm rounded-2xl flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-bold text-[#1F2937] mb-2">{feature.title}</h3>
-                <p className="text-[#6B7280] text-sm leading-relaxed font-light">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= STATISTICS ================= */}
-      <section className="py-20 bg-[#0F4C81] text-white relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-        
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-center relative z-10">
-          {[
-            { target: 500, label: "Destinations", icon: <FaMapMarkedAlt /> },
-            { target: 10000, label: "Happy Travelers", icon: <FaUserFriends /> },
-            { target: 1500, label: "Trips Planned", icon: <FaPlane /> },
-            { target: 247, label: "Support Hours", icon: <FaHeadset /> },
-          ].map((stat, idx) => (
-            <div key={idx} className="flex flex-col items-center group">
-              <div className="text-4xl text-[#1E88E5] mb-3 group-hover:scale-110 transition-transform duration-300 group-hover:text-white">
-                {stat.icon}
-              </div>
-              <span className="text-4xl md:text-5xl font-extrabold mb-1 tracking-tight">
-                {stat.target === 247 ? "24/7" : <AnimatedCounter target={stat.target} suffix={stat.target === 247 ? "" : "+"} />}
-              </span>
-              <span className="text-blue-200/70 text-sm font-medium uppercase tracking-wider">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ================= CALL TO ACTION ================= */}
-      <section className="relative py-32 overflow-hidden bg-[#0F4C81]">
-        <div className="absolute inset-0 opacity-30">
-          <img src={mustangImage} alt="Nepal Adventure" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0F4C81]/90 via-[#0F4C81]/60 to-black/80 mix-blend-multiply"></div>
-        </div>
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-6 text-white">
-          <h2 className="text-5xl md:text-6xl font-bold mb-5 drop-shadow-2xl tracking-tight">Ready to Start Planning?</h2>
-          <p className="text-xl text-blue-100/80 mb-10 max-w-2xl mx-auto font-light">Join thousands of explorers. Create your personalized, AI-powered Nepal itinerary in minutes.</p>
-          <button onClick={() => navigate('/GeoJango_Map')} className="px-10 py-4 bg-white text-[#0F4C81] rounded-full font-bold text-lg hover:bg-gray-100 hover:scale-105 transition-all shadow-2xl shadow-white/20 flex items-center gap-3 mx-auto">
-            Start Planning <FaArrowRight size={16} />
-          </button>
-        </div>
-      </section>
-
+    
       {/* ================= GLOBAL CSS ANIMATIONS ================= */}
       <style>{`
         @keyframes fadeInUp {
