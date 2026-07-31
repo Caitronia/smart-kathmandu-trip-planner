@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
-  FaSearch, FaHeart, FaStar, FaPlane, FaMapMarkedAlt, 
-  FaMountain, FaTree, FaLandmark, FaPray, FaSpa, FaUsers, FaRing, 
-  FaChartLine, FaCheckCircle, FaUserFriends, FaHeadset, FaArrowRight, 
-  FaBars, FaTimes, FaInstagram, FaFacebook, FaTwitter, FaYoutube, FaGlobe,
-  FaCalendarAlt, FaCompass, FaSun, FaHotel, FaRoute, FaUserTie, FaHiking,
-  FaCrown, FaEnvelope, FaGithub, FaLinkedinIn, FaPaperPlane
+  FaSearch, FaMapMarkedAlt, 
+  FaUserFriends, FaHeadset, FaArrowRight, 
+  FaGlobe,
+  FaCalendarAlt, FaSun, FaHotel, FaRoute, FaUserTie,
+  FaChartLine, FaPlane
 } from 'react-icons/fa';
-import { GiHiking, GiElephant, GiCampingTent, GiMountainClimbing } from 'react-icons/gi';
-import { MdForest } from 'react-icons/md';
 
 // ==========================================================
 // === EXACT LOCAL ASSET IMPORTS =============================
@@ -21,101 +18,40 @@ import pokharaImage from '../assets/pokhara.jpg';
 import sagarmathaImage from '../assets/sagarmatha.jpg';
 
 // ==========================================================
-// === MOCK API INTEGRATION ==================================
+// === EXCLUSIVE DESTINATIONS (3 boxes) =======================
 // ==========================================================
-const api = {
-  getDestinations: () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          { id: 1, name: "Kathmandu Valley", location: "Bagmati Province", rating: 4.8, price: "NPR 9,500", duration: "5 Days", season: "Autumn & Spring", image: boudhaImage, desc: "Immerse yourself in millennia-old architecture, vibrant culture, and sacred stupas." },
-          { id: 2, name: "Pokhara", location: "Gandaki Province", rating: 4.9, price: "NPR 7,200", duration: "4 Days", season: "Year-round", image: pokharaImage, desc: "A serene lakeside retreat offering breathtaking panoramic views of the majestic Annapurna range." },
-          { id: 3, name: "Chitwan", location: "Bagmati Province", rating: 4.6, price: "NPR 6,500", duration: "3 Days", season: "Winter & Spring", image: chitwanImage, desc: "Experience thrilling jungle safaris and close encounters with endangered rhinos and tigers." },
-          { id: 4, name: "Mustang", location: "Gandaki Province", rating: 4.7, price: "NPR 22,000", duration: "12 Days", season: "Summer & Autumn", image: mustangImage, desc: "The mystical 'Forbidden Kingdom', featuring ancient cave monasteries and lunar-like landscapes." },
-        ]);
-      }, 1200);
-    });
-  }
-};
+const exclusiveDestinations = [
+  { name: "POKHARA TOUR", image: pokharaImage },
+  { name: "EVEREST BASE CAMP TREK", image: sagarmathaImage },
+  { name: "CHITWAN SAFARI", image: chitwanImage },
+];
 
 // ==========================================================
-// === REUSABLE HOOKS & UTILITIES ============================
+// === PACKAGES (2 boxes) ======================================
 // ==========================================================
-const useDataFetching = (fetchFn) => {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+const packages = [
+  { name: "EXPLORE PACKAGES", image: mustangImage },
+  { name: "KATHMANDU HERITAGE PACKAGE", image: boudhaImage },
+];
 
-  useEffect(() => {
-    let isMounted = true;
-    setIsLoading(true);
-    fetchFn()
-      .then(res => { if (isMounted) setData(res); })
-      .catch(err => { if (isMounted) setError(err); })
-      .finally(() => { if (isMounted) setIsLoading(false); });
-    return () => { isMounted = false; };
-  }, [fetchFn]);
-
-  return { data, isLoading, error };
-};
-
-// ==========================================================
-// === SUB-COMPONENTS ========================================
-// ==========================================================
-const StarRating = memo(({ rating }) => (
-  <div className="flex items-center gap-1">
-    {[...Array(5)].map((_, i) => (
-      <FaStar key={i} className={i < Math.floor(rating) ? "text-amber-400 fill-current" : "text-gray-200"} size={14} />
-    ))}
-    <span className="text-xs font-bold text-gray-700 ml-1.5 tracking-tight">{rating.toFixed(1)}</span>
-  </div>
-));
-
-const DestinationCard = memo(({ dest }) => {
-  const navigate = useNavigate();
-  return (
-    <div className="group bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.15)] transition-all duration-500 ease-in-out hover:-translate-y-2 border border-gray-100/80">
-      <div className="relative h-64 overflow-hidden bg-gray-100">
-        <img src={dest.image} alt={dest.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" />
-        <button className="absolute top-4 right-4 p-2.5 bg-white/90 backdrop-blur-md rounded-full text-gray-400 hover:text-rose-500 hover:bg-white shadow-sm transition-all duration-200 hover:scale-105">
-          <FaHeart size={16} />
-        </button>
-        <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 via-black/20 to-transparent p-5 pt-12">
-          <div className="flex justify-between items-end text-white">
-            <div className="flex flex-col">
-              <span className="text-xs font-medium tracking-wide uppercase opacity-90">{dest.location}</span>
-              <div className="flex items-center gap-2 mt-1 text-xs opacity-80">
-                <FaCalendarAlt size={12} /> {dest.duration}
-              </div>
-            </div>
-            <div className="text-xs font-medium bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-              <span className="opacity-70">Best:</span> {dest.season}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-xl font-bold text-gray-900 tracking-tight">{dest.name}</h3>
-          <StarRating rating={dest.rating} />
-        </div>
-        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 h-10 mb-5">{dest.desc}</p>
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100/80">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Starting from</span>
-            <span className="text-lg font-bold text-gray-900">{dest.price}</span>
-          </div>
-          <button 
-            onClick={() => navigate('/GeoJango_Map')}
-            className="inline-flex items-center gap-2 bg-[#0F4C81] text-white px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-[#1E88E5] hover:shadow-lg transition-all duration-300 ease-in-out"
-          >
-            Explore <FaArrowRight size={12} />
-          </button>
-        </div>
-      </div>
+const TourCard = ({ tour, onClick }) => (
+  <div
+    onClick={onClick}
+    className="group relative h-[340px] rounded-xl overflow-hidden shadow-lg cursor-pointer border border-gray-200"
+  >
+    <img
+      src={tour.image}
+      alt={tour.name}
+      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+    />
+    <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300" />
+    <div className="absolute inset-0 flex items-center justify-center px-6">
+      <h3 className="text-white text-2xl md:text-3xl font-extrabold uppercase tracking-wide text-center drop-shadow-lg">
+        {tour.name}
+      </h3>
     </div>
-  );
-});
+  </div>
+);
 
 const AnimatedCounter = ({ target, suffix = "+" }) => {
   const [count, setCount] = useState(0);
@@ -145,19 +81,8 @@ const AnimatedCounter = ({ target, suffix = "+" }) => {
 // ==========================================================
 export default function Home() {
   const navigate = useNavigate();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [floatingMouse, setFloatingMouse] = useState({ x: 0, y: 0 });
   const destinationsRef = useRef(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const { data: destinations, isLoading: destLoading, error: destError } = useDataFetching(api.getDestinations);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -170,20 +95,6 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const handleScrollToDestinations = useCallback((e) => {
-    e.preventDefault();
-    destinationsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setMobileMenuOpen(false);
-  }, []);
-
-  // 🔐 Intercept protected link clicks if not logged in
-  const handleProtectedClick = (e, path) => {
-    if (!isLoggedIn) {
-      e.preventDefault();
-      navigate('/login');
-    }
-  };
-
   return (
     <div className="font-sans antialiased text-[#1F2937] bg-white selection:bg-[#1E88E5]/20 selection:text-[#0F4C81] overflow-x-hidden">
       
@@ -193,8 +104,6 @@ export default function Home() {
           <img src={sagarmathaImage} alt="Mount Everest Landscape" className="w-full h-full object-cover scale-105" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/80"></div>
         </div>
-
-        
 
         <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 w-full animate-fade-in-up">
           <div className="max-w-2xl">
@@ -259,54 +168,49 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        
       </section>
 
-      {/* ================= 2. FEATURED DESTINATIONS GRID ================= */}
-      <section ref={destinationsRef} className="py-28 bg-[#F8FAFC]">
+      {/* ================= 2. EXCLUSIVE DESTINATIONS (3 boxes) ================= */}
+      <section ref={destinationsRef} className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1F2937] mb-3 tracking-tight">Exclusive Destinations</h2>
-              <p className="text-[#6B7280] text-lg max-w-lg font-light">Hand-picked experiences showcasing the breathtaking diversity of Nepal's landscapes and culture.</p>
-            </div>
-            <button onClick={() => navigate('/GeoJango_Map')} className="text-sm font-semibold text-[#0F4C81] hover:text-[#1E88E5] transition-colors flex items-center gap-2 group border-b border-transparent hover:border-[#0F4C81] pb-1 cursor-pointer">
-              View all destinations <FaArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#1F2937] mb-3 tracking-tight">Exclusive Destinations</h2>
+            <p className="text-[#6B7280] text-lg max-w-2xl mx-auto font-light">Hand-picked experiences showcasing the breathtaking diversity of Nepal's landscapes and culture.</p>
           </div>
 
-          {destLoading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 h-[450px] animate-pulse">
-                  <div className="h-64 bg-gray-200"></div>
-                  <div className="p-6 space-y-4">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                    <div className="h-16 bg-gray-100 rounded mt-4"></div>
-                    <div className="h-10 bg-gray-200 rounded mt-2"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {destError && (
-            <div className="text-center py-16 text-red-500 bg-red-50/50 rounded-2xl border border-red-100 backdrop-blur-sm">
-              <p className="font-medium">Failed to load destinations.</p>
-              <p className="text-sm mt-2 text-red-400">Please refresh the page.</p>
-            </div>
-          )}
-
-          {!destLoading && !destError && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-              {destinations.map(dest => <DestinationCard key={dest.id} dest={dest} />)}
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {exclusiveDestinations.map((dest) => (
+              <TourCard
+                key={dest.name}
+                tour={dest}
+                onClick={() => navigate('/GeoJango_Map')}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ================= 3. WHY CHOOSE US ================= */}
+      {/* ================= 3. PACKAGES (3 boxes) ================= */}
+      <section className="py-20 bg-[#F8FAFC]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#1F2937] mb-3 tracking-tight">Packages</h2>
+            <p className="text-[#6B7280] text-lg max-w-2xl mx-auto font-light">Curated, all-inclusive travel packages built for every kind of explorer — private and fully customizable.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {packages.map((pkg) => (
+              <TourCard
+                key={pkg.name}
+                tour={pkg}
+                onClick={() => navigate('/GeoJango_Map')}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= 4. WHY CHOOSE US ================= */}
       <section className="py-24 bg-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#1E88E5]/5 rounded-full blur-3xl opacity-50 -z-10"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#0F4C81]/5 rounded-full blur-3xl opacity-50 -z-10"></div>
@@ -331,33 +235,6 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold text-[#1F2937] mb-2">{feature.title}</h3>
                 <p className="text-[#6B7280] text-sm leading-relaxed font-light">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ================= 4. TRAVEL CATEGORIES ================= */}
-      <section className="py-24 bg-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center text-[#1F2937] mb-14 tracking-tight">Travel Experiences</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: "Mountain Expeditions", icon: <GiMountainClimbing />, desc: "High-altitude treks & peaks" },
-              { name: "Trekking Routes", icon: <GiHiking />, desc: "Epic trails through the Himalayas" },
-              { name: "Wildlife Safaris", icon: <GiElephant />, desc: "Jungle adventures & rare species" },
-              { name: "Cultural Heritage", icon: <FaLandmark />, desc: "Ancient temples & traditions" },
-              { name: "Spiritual Journeys", icon: <FaPray />, desc: "Meditation & pilgrimage sites" },
-              { name: "Luxury Retreats", icon: <FaCrown />, desc: "Premium accommodations & spas" },
-              { name: "Nature Exploration", icon: <MdForest />, desc: "Pristine forests & landscapes" },
-              { name: "Adventure Sports", icon: <FaCompass />, desc: "Rafting, paragliding & more" },
-            ].map((cat) => (
-              <div key={cat.name} className="group bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100/80 hover:border-[#0F4C81]/20 cursor-pointer">
-                <div className="flex justify-center items-center text-4xl text-[#0F4C81] mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {cat.icon}
-                </div>
-                <h3 className="text-base font-bold text-[#1F2937] mb-2">{cat.name}</h3>
-                <p className="text-sm text-[#6B7280] font-light">{cat.desc}</p>
               </div>
             ))}
           </div>
@@ -402,8 +279,6 @@ export default function Home() {
           </button>
         </div>
       </section>
-
-     
 
       {/* ================= GLOBAL CSS ANIMATIONS ================= */}
       <style>{`
